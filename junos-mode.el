@@ -53,31 +53,13 @@
   "Keyword highlighting specification for `junos-mode'.")
 
 ;;;###autoload
-(define-derived-mode junos-mode fundamental-mode "JunOS"
+(define-derived-mode junos-mode c-mode "JunOS"
   "A major mode for editing JunOS files."
   :syntax-table junos-mode-syntax-table
   (setq-local comment-start "# ")
   (setq-local comment-start-skip "#+\\s-*")
   (setq-local font-lock-defaults
-              '(junos-font-lock-keywords))
-  (setq-local indent-line-function 'junos-indent-line))
-
-;;; Indentation
-
-(defun junos-indent-line ()
-  "Indent current line of Junos code."
-  (interactive)
-  (let ((savep (> (current-column) (current-indentation)))
-        (indent (condition-case nil (max (junos-calculate-indentation) 0)
-                  (error 0))))
-    (if savep
-        (save-excursion (indent-line-to indent))
-      (indent-line-to indent))))
-
-(defun junos-calculate-indentation ()
-  "Return the column to which the current line should be indented."
-  ...)
-
+              '(junos-font-lock-keywords)))
 
 (provide 'junos-mode)
 ;;; junos-mode.el ends here
