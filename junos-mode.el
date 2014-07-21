@@ -56,6 +56,7 @@
 (define-derived-mode junos-mode c-mode "JunOS"
   "A major mode for editing JunOS files."
   :syntax-table junos-mode-syntax-table
+  (c-set-offset 'label '+)
   (setq-local comment-start "# ")
   (setq-local comment-start-skip "#+\\s-*")
   (setq-local font-lock-defaults
