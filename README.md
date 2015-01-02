@@ -5,6 +5,8 @@ This features `junos-mode` a mode for editing JunOS-like files.
 
 There is currently no configuration knob.
 
+![Screenshot of junos-mode](screenshot.jpg)
+
 License
 -------
 
