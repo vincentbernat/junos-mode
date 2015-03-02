@@ -27,7 +27,7 @@
 ;;; Code:
 (unless (fboundp 'setq-local)
   (defmacro setq-local (var val)
-    `(set (make-local-variable ',var) ,val))))
+    `(set (make-local-variable ',var) ,val)))
 
 (defvar junos-mode-syntax-table
    (let ((st (make-syntax-table)))
