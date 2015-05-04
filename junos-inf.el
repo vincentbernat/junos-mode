@@ -29,27 +29,13 @@
 (defvar junos-inf-prompt-regexp "^\\(?:[^@]+@[^@>#]+[>#] \\)"
   "Prompt for JunOS session.")
 
-(defvar junos-inf-mode-map
-  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
-    (define-key map "\t" 'completion-at-point)
-    map)
-  "Basic mode map for `run-junos'.")
-
-(defvar junos-inf-font-lock-keywords
-  '((junos-inf-prompt-regexp . 'font-lock-constant-face))
-  "Keyword highlighting specification for `junos-inf-mode'.")
-
 (define-derived-mode junos-inf-mode comint-mode "JunOS"
-  "A major mode for running JunOS CLI.
-
-\\<junos-inf-mode-map>"
+  "A major mode for running JunOS CLI."
   (setq-local paragraph-start junos-inf-prompt-regexp)
   (setq-local comint-process-echoes t)
   (setq-local comint-use-prompt-regexp t)
   (setq-local comint-prompt-regexp junos-inf-prompt-regexp)
-  (setq-local comint-prompt-read-only t)
-  (setq-local font-lock-defaults
-              '(junos-inf-font-lock-keywords)))
+  (setq-local comint-prompt-read-only t))
 
 (defun run-junos (host)
   "Start an a JunOS connection into an inferior process.
