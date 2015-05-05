@@ -31,8 +31,7 @@
 
 (defvar junos-inf-setup-commands
   '("set cli screen-width 0"
-    "set cli screen-length 0"
-    "set cli timestamp")
+    "set cli screen-length 0")
   "Commands to run to setup a session.")
 
 (define-derived-mode junos-inf-mode comint-mode "JunOS"
