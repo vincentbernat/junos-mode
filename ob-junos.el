@@ -54,9 +54,9 @@ are left as-is."
 (defun org-babel-execute:junos (body params)
   "Execute a block of JunOS code with org-babel.
 This function is called by `org-babel-execute-src-block'"
-  (let* ((session-name (cdr (assoc :session params)))
-         (host-name session-name)
-         (session (org-babel-junos-initiate-session session-name host-name))
+  (let* ((host-name (or (cdr (assoc :host params))
+                        (error "An HOST parameter is mandatory")))
+         (session (org-babel-junos-initiate-session host-name))
          (p (get-buffer-process session))
          (full-body (org-babel-expand-body:junos
 		     body params)))
@@ -84,19 +84,13 @@ This function is called by `org-babel-execute-src-block'"
                            (line-beginning-position 2))
            (point)))))))
 
-
-(defun org-babel-prep-session:junos (session params)
-  "Prepare SESSION according to the header arguments specified in PARAMS."
-  (org-babel-junos-initiate-session session))
-
-(defun org-babel-junos-initiate-session (&optional session host)
-  "If there is not a current inferior-process-buffer in SESSION then create.
+(defun org-babel-junos-initiate-session (&optional host)
+  "If there is not a current session for HOST then create.
 Return the initialized session.  The session will be created with
 HOST as a target."
-  (when (and session (not (string= session "none")))
-    (save-window-excursion
-      (or (org-babel-comint-buffer-livep (concat "*" "junos " session "*"))
-          (run-junos host)))))
+  (save-window-excursion
+    (or (org-babel-comint-buffer-livep (concat "*" "junos " host "*"))
+        (run-junos host))))
 
 (provide 'ob-junos)
 ;;; ob-junos.el ends here
