@@ -42,8 +42,10 @@
   "Start an a JunOS connection into an inferior process.
 The JunOS connection is made with ssh to the provided
 HOST."
-  (let* ((buffer
-          (apply 'make-comint (concat "junos " host) "ssh" nil (list host)))
+  (let* ((name (concat "junos " host))
+         (buffer (make-comint-in-buffer name
+                                        (generate-new-buffer (concat "*" name "*"))
+                                        "ssh" nil host))
          (p (get-buffer-process buffer)))
     (with-current-buffer buffer
       (junos-inf-mode)
