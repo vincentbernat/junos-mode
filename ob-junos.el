@@ -29,6 +29,7 @@
 (require 'junos-inf)
 (require 'ob)
 (require 'cl-lib)
+(require 's)
 
 ;; optionally define a file extension for this language
 (add-to-list 'org-babel-tangle-lang-exts '("junos" . "cfg"))
@@ -63,26 +64,31 @@ This function is called by `org-babel-execute-src-block'"
     (junos-inf-send-command p "edit")
     (junos-inf-wait-for-prompt p)
     (junos-inf-send-command p "top load replace terminal")
-    (with-current-buffer session
-      (accept-process-output p)         ; Wait for prompt
-      (goto-char (point-max))
-      (process-send-string p full-body)
-      (process-send-string p "\n")
-      (goto-char (point-max))
-      (let ((parsing-end (marker-position (process-mark p))))
-        (comint-send-eof)
-        (junos-inf-wait-for-prompt p)
-        (junos-inf-send-command p "show | diff")
-        (junos-inf-wait-for-prompt p)
-        (junos-inf-send-command p "commit check")
-        (junos-inf-wait-for-prompt p)
-        (goto-char (point-max))
-        (save-excursion
-          (end-of-line 0)
-          (buffer-substring-no-properties
-           (save-excursion (goto-char parsing-end)
-                           (line-beginning-position 2))
-           (point)))))))
+    (let ((load-output
+           (with-current-buffer session
+             (accept-process-output p)         ; Wait for prompt
+             (goto-char (point-max))
+             (process-send-string p full-body)
+             (process-send-string p "\n")
+             (let ((parsing-end (marker-position (process-mark p))))
+               (comint-send-eof)
+               (junos-inf-wait-for-prompt p)
+               (goto-char (point-max))
+               (save-excursion
+                 (end-of-line 0)
+                 (buffer-substring-no-properties
+                  (save-excursion (goto-char parsing-end)
+                                  (line-beginning-position 2))
+                  (point)))))))
+      (concat "Load replace output:\n"
+              "————————————————————\n"
+              (s-chop-suffix "[edit]" load-output)
+              "Differences:\n"
+              "————————————\n"
+              (s-chop-suffix "[edit]" (junos-inf-send-command-and-get-result p "show | diff"))
+              "Checks:\n"
+              "———————\n"
+              (s-chop-suffix "[edit]" (junos-inf-send-command-and-get-result p "commit check"))))))
 
 (defun org-babel-junos-initiate-session (&optional host)
   "If there is not a current session for HOST then create.
