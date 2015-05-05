@@ -102,5 +102,21 @@ The command is STR and a new line is automatically appended."
     (setq junos-inf-seen-prompt nil)
     (comint-send-string proc str)))
 
+(defun junos-inf-send-command-and-get-result (proc str)
+  "Send a command to a given PROC and return the result output.
+The command is STR and a new line is automatically appended.  The
+two first lines are the echoed command and the timestamp."
+  (with-current-buffer (process-buffer proc)
+    (let ((parsing-end (marker-position (process-mark proc))))
+      (junos-inf-send-command proc str)
+      (junos-inf-wait-for-prompt proc)
+      (goto-char (point-max))
+      (save-excursion
+        (end-of-line 0)
+        (buffer-substring-no-properties
+         (save-excursion (goto-char parsing-end)
+                         (line-beginning-position 2))
+         (point))))))
+
 (provide 'junos-inf)
 ;;; junos-inf.el ends here
