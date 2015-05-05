@@ -55,8 +55,7 @@ are left as-is."
   "Execute a block of JunOS code with org-babel.
 This function is called by `org-babel-execute-src-block'"
   (let* ((session-name (cdr (assoc :session params)))
-         (host-name (or (cdr (assoc :host params))
-                        session-name))
+         (host-name session-name)
          (session (org-babel-junos-initiate-session session-name host-name))
          (p (get-buffer-process session))
          (full-body (org-babel-expand-body:junos
