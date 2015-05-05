@@ -27,6 +27,27 @@ For example:
         }
     }
     #+END_SRC
+    
+    #+RESULTS:
+    #+begin_example
+    Load replace output:
+    ————————————————————
+    [Type ^D at a new line to end input]
+    load complete
+    
+    Differences:
+    ————————————
+    show | diff 
+    [edit routing-instances FW-CLOUD routing-options static]
+           route 192.0.2.40/32 { ... }
+    +      route 0.0.0.0/0 next-hop 192.0.2.1;
+    
+    Checks:
+    ———————
+    commit check 
+    configuration check succeeds
+    
+    #+end_example
 
 ## License
 
