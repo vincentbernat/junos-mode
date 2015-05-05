@@ -1,5 +1,4 @@
-Mode for JunOS configuration files
-==================================
+# Mode for JunOS configuration files
 
 This features `junos-mode` a mode for editing JunOS-like files.
 
@@ -7,8 +6,29 @@ There is currently no configuration knob.
 
 ![Screenshot of junos-mode](screenshot.jpg)
 
-License
--------
+## Integration with Babel
+
+It also comes with an integration with Babel. This integration is
+quite basic and will send a configuration to the host and provide
+output of `commit check` and `show | diff`. There is no support for
+session. An inferior process is run for each provided host and will
+not be killed automatically.
+
+For example:
+
+    #+BEGIN_SRC junos :host alfred.exoscale.local
+    routing-instances {
+        FW-CLOUD {
+            routing-options {
+                static {
+                    route 0.0.0.0/0 next-hop 192.0.2.1;
+                }
+            }
+        }
+    }
+    #+END_SRC
+
+## License
 
 > This file is free software; you can redistribute it and/or modify
 > it under the terms of the GNU General Public License as published by
