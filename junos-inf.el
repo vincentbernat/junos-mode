@@ -29,6 +29,12 @@
 (defvar junos-inf-prompt-regexp "^\\(?:[^@]+@[^@>#]+[>#] \\)"
   "Prompt for JunOS session.")
 
+(defvar junos-inf-setup-commands
+  '("set cli screen-width 0"
+    "set cli screen-length 0"
+    "set cli timestamp")
+  "Commands to run to setup a session.")
+
 (define-derived-mode junos-inf-mode comint-mode "JunOS"
   "A major mode for running JunOS CLI."
   (setq-local paragraph-start junos-inf-prompt-regexp)
@@ -50,9 +56,7 @@ HOST."
     (with-current-buffer buffer
       (junos-inf-mode)
       (junos-inf-wait-for-prompt p)
-      (dolist (cmd '("set cli screen-width 0"
-                     "set cli screen-length 0"
-                     "set cli timestamp"))
+      (dolist (cmd junos-inf-setup-commands)
         (junos-inf-send-command p cmd)
         (junos-inf-wait-for-prompt p))
       (goto-char (process-mark p)))
