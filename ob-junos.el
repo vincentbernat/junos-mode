@@ -26,7 +26,6 @@
 ;; This will evaluate JunOS snippets to a remote JunOS device.
 
 ;;; Code:
-(require 'junos-inf)
 (require 'ob)
 (require 'cl-lib)
 (require 's)
@@ -94,6 +93,7 @@ This function is called by `org-babel-execute-src-block'"
   "If there is not a current session for HOST then create.
 Return the initialized session.  The session will be created with
 HOST as a target."
+  (require 'junos-inf)
   (save-window-excursion
     (or (org-babel-comint-buffer-livep (concat "*" "junos " host "*"))
         (run-junos host))))
