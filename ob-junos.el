@@ -67,8 +67,8 @@ This function is called by `org-babel-execute-src-block'"
            (with-current-buffer session
              (accept-process-output p)         ; Wait for prompt
              (goto-char (point-max))
-             (process-send-string p full-body)
-             (process-send-string p "\n")
+             (junos-inf-send-string p full-body)
+             (junos-inf-send-string p "\n")
              (let ((parsing-end (marker-position (process-mark p))))
                (comint-send-eof)
                (junos-inf-wait-for-prompt p)

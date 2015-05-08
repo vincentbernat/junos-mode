@@ -25,6 +25,7 @@
 
 ;;; Code:
 (require 'comint)
+(require 'cl)
 
 (defvar junos-inf-prompt-regexp "^\\(?:[^@]+@[^@>#]+[>#] \\)"
   "Prompt for JunOS session.")
@@ -33,6 +34,13 @@
   '("set cli screen-width 0"
     "set cli screen-length 0")
   "Commands to run to setup a session.")
+
+(defvar junos-inf-chunk-length
+  200
+  "Chunk length for sending large strings.")
+(defvar junos-inf-chunk-pause
+  0.1
+  "Pause between each chunk when sending large strings.")
 
 (define-derived-mode junos-inf-mode comint-mode "JunOS"
   "A major mode for running JunOS CLI."
@@ -100,6 +108,20 @@ The command is STR and a new line is automatically appended."
     (move-marker comint-last-input-end (point))
     (setq junos-inf-seen-prompt nil)
     (comint-send-string proc str)))
+
+(defun junos-inf-send-string (proc str)
+  "Send a large string to PROC.
+The string STR will be chunked in several smaller chunks and a
+pause will be marked between each chunk.  Large strings sent to
+the JunOS cli are usually truncated.  This is a work-around
+that."
+  (cl-loop
+   for i = 0 then (+ i junos-inf-chunk-length)
+   while (< i (length str))
+   do (let ((chunk (subseq str i (min (+ i junos-inf-chunk-length)
+                                      (length str)))))
+        (process-send-string proc chunk)
+        (sleep-for junos-inf-chunk-pause))))
 
 (defun junos-inf-send-command-and-get-result (proc str)
   "Send a command to a given PROC and return the result output.
