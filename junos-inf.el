@@ -36,7 +36,7 @@
   "Commands to run to setup a session.")
 
 (defvar junos-inf-chunk-length
-  500
+  300
   "Chunk length for sending large strings.")
 (defvar junos-inf-chunk-pause
   0.1
