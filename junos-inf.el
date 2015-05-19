@@ -36,10 +36,10 @@
   "Commands to run to setup a session.")
 
 (defvar junos-inf-chunk-length
-  200
+  100
   "Chunk length for sending large strings.")
 (defvar junos-inf-chunk-pause
-  0.03
+  0.05
   "Pause between each chunk when sending large strings.")
 
 (define-derived-mode junos-inf-mode comint-mode "JunOS"
