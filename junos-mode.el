@@ -62,6 +62,7 @@
   :syntax-table junos-mode-syntax-table
   (c-set-offset 'label '+)
   (setq-local comment-start "# ")
+  (setq-local comment-end "")
   (setq-local comment-start-skip "#+\\s-*")
   (setq-local font-lock-defaults
               '(junos-font-lock-keywords)))
