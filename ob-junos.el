@@ -33,6 +33,10 @@
 ;; optionally define a file extension for this language
 (add-to-list 'org-babel-tangle-lang-exts '("junos" . "cfg"))
 
+(defconst org-babel-header-args:junos
+  '((host		 . :any))
+  "junos-specific header arguments.")
+
 (defvar org-babel-default-header-args:junos '())
 
 (defun org-babel-expand-body:junos (body params &optional processed-params)
@@ -54,7 +58,7 @@ are left as-is."
 (defun org-babel-execute:junos (body params)
   "Execute a block of JunOS code with org-babel.
 This function is called by `org-babel-execute-src-block'"
-  (let* ((host-name (or (cdr (assoc :host params))
+  (let* ((host-name (or (cdr (assq :host params))
                         (error "An HOST parameter is mandatory")))
          (session (org-babel-junos-initiate-session host-name))
          (p (get-buffer-process session))
