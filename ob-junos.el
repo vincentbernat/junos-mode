@@ -39,20 +39,21 @@
 
 (defvar org-babel-default-header-args:junos '())
 
-(defun org-babel-expand-body:junos (body params &optional processed-params)
+(defun org-babel-expand-body:junos (body params)
   "Expand BODY according to PARAMS, return the expanded body.
 
 Variables are expected to be `$variable-form'. Unknown variable
 are left as-is."
-  (let ((vars (assoc :var (or processed-params (org-babel-process-params params)))))
+  (let ((vars (org-babel--get-vars params)))
     (cl-reduce (lambda (body pair)
                  (replace-regexp-in-string
                   (concat "\\b"
-                          (regexp-quote (concat "$" (car pair)))
+                          (regexp-quote (concat "$" (symbol-name (car pair))))
                           "\\b")
                   (cdr pair)
                   body))
-               (cons body vars))))
+               vars
+               :initial-value body)))
 
 ;;;###autoload
 (defun org-babel-execute:junos (body params)
