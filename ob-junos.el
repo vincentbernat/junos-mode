@@ -99,8 +99,12 @@ Return the initialized session.  The session will be created with
 HOST as a target."
   (require 'junos-inf)
   (save-window-excursion
-    (or (org-babel-comint-buffer-livep (concat "*" "junos " host "*"))
-        (run-junos host))))
+    (let* ((bufname (concat "*" "junos " host "*"))
+           (all-buffers (mapcar #'buffer-name (buffer-list)))
+           (host-buffers (remove-if-not (lambda (name) (s-starts-with? bufname name)) all-buffers))
+           (live-buffers (remove-if-not #'org-babel-comint-buffer-livep host-buffers)))
+      (or (car live-buffers)
+          (run-junos host)))))
 
 (provide 'ob-junos)
 ;;; ob-junos.el ends here
