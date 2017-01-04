@@ -50,7 +50,7 @@ are left as-is."
                   (concat "\\b"
                           (regexp-quote (concat "$" (symbol-name (car pair))))
                           "\\b")
-                  (cdr pair)
+                  (format "%s" (cdr pair))
                   body))
                vars
                :initial-value body)))
