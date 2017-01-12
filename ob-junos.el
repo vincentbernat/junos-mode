@@ -189,7 +189,7 @@ created.  Returns the (possibly newly created) process buffer."
           (insert (format  "  [[junos-rollback:%s][Rollback]]  🍂" host))
           (insert (format  "  [[junos-rollback:%s#1][Rollback 1]]\n" host))
           (when (looking-at " | \\[\\[junos-commit:")
-            (delete-region (point) (line-end-position))))))))
+            (delete-region (point) (+ 1 (line-end-position)))))))))
 
 <async:junos:
 (org-add-link-type "junos-commit" 'org-junos-commit)
