@@ -101,6 +101,7 @@ should get a BODY and the associated PARAMS."
                                 "check " host-name "\n"))
     ;; Build result with placeholders
     (s-join "\n" (list
+                  (format "Host: %s" host-name)
                   "Load replace"
                   "‾‾‾‾‾‾‾‾‾‾‾‾"
                   (format "<async:junos:%s>" uuid-load)
@@ -155,9 +156,65 @@ created.  Returns the (possibly newly created) process buffer."
                                          (string= sep "."))
                                  (let ((beg (point)))
                                    (forward-line 1)
-                                   (delete-region beg (point))))
+                                   (delete-region beg (point)))
+                                 (org-babel-junos-junos.py-add-links))
                                t))))))))
   string)
+
+(defun org-babel-junos-junos.py-add-links ()
+  "Add links for commit/rollback just below the current results."
+  (save-restriction
+    (org-narrow-to-block)
+    (goto-char 0)
+    (unless (search-forward "<async:junos:" nil t)
+      ;; Grab the host from the first line
+      (goto-char 0)
+      (forward-line 1)
+      (when (looking-at "Host: ")
+        (let* ((beg (point))
+               (end (line-end-position))
+               (host (buffer-substring-no-properties (+ 6 beg) end)))
+          (forward-line 1)
+          (delete-region beg (point))
+          ;; We can now add the links
+          (goto-char (point-max))
+          (widen)
+          (forward-char)
+          (insert (format " | [[junos-commit:%s][Commit]]  🍂" host))
+          (insert (format  "  [[junos-commit:%s#2][Commit confirm]]  🍂" host))
+          (insert (format  "  [[junos-rollback:%s][Rollback]]  🍂" host))
+          (insert (format  "  [[junos-rollback:%s#1][Rollback 1]]\n" host))
+          (when (looking-at " | \\[\\[junos-commit:")
+            (delete-region (point) (line-end-position))))))))
+
+<async:junos:
+(org-add-link-type "junos-commit" 'org-junos-commit)
+(org-add-link-type "junos-rollback" 'org-junos-rollback)
+
+(defun org-junos-do (command host)
+  "Execute a JunOS COMMAND for the given HOST.
+
+If HOST contains ends with `::' followed by a number, it will be
+used for additional arguments."
+  (let* ((matches (s-match "\\(.*?\\)\\(#\\([0-9]+\\)\\)?$" host))
+         (host (nth 1 matches))
+         (number (nth 3 matches))
+         (uuid-commit (uuid-string))
+         (session (org-babel-junos-initiate-session)))
+    (save-excursion)
+    (message (format "junos: %s/%s for %s" command number host))
+    (comint-send-string session
+                        (concat uuid-commit " "
+                                command " " host
+                                (if number (format " %s" number) "")
+                                "\n"))))
+
+(defun org-junos-commit (host)
+  "Commit a JunOS configuration for provided HOST."
+  (org-junos-do "commit" host))
+(defun org-junos-rollback (host)
+  "Rollback JunOS configuration for provided HOST."
+  (org-junos-do "rollback" host))
 
 (provide 'ob-junos)
 ;;; ob-junos.el ends here
