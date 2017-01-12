@@ -49,6 +49,9 @@
 
 (defvar org-babel-default-header-args:junos '())
 
+(defvar org-babel-junos-add-links t
+  "Add links to commit/rollback a configuration after successful execution of a source block.")
+
 (defun org-babel-expand-body:junos (body params)
   "Expand BODY according to PARAMS, return the expanded body.
 
@@ -157,7 +160,8 @@ created.  Returns the (possibly newly created) process buffer."
                                  (let ((beg (point)))
                                    (forward-line 1)
                                    (delete-region beg (point)))
-                                 (org-babel-junos-junos.py-add-links))
+                                 (when org-babel-junos-add-links
+                                   (org-babel-junos-junos.py-add-links)))
                                t))))))))
   string)
 
