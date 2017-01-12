@@ -8,45 +8,29 @@ There is currently no configuration knob.
 
 ## Integration with Babel
 
-It also comes with an integration with Babel. This integration is
-quite basic and will send a configuration to the host and provide
-output of `commit check` and `show | diff`. There is no support for
-session. An inferior process is run for each provided host and will
-not be killed automatically.
+It also comes with an integration with Babel. It uses a small Python
+helper to efficiently handle several parallel sessions
+asynchronously. This helper
+uses [Junos PyEZ](https://github.com/Juniper/py-junos-eznc).
 
-For example:
 
     #+BEGIN_SRC junos :host alfred.exoscale.local
-    routing-instances {
-        FW-CLOUD {
-            routing-options {
-                static {
-                    route 0.0.0.0/0 next-hop 192.0.2.1;
-                }
-            }
-        }
+    system {
+        time-zone Europe/Paris;
     }
     #+END_SRC
     
     #+RESULTS:
     #+begin_example
-    Load replace output:
-    ————————————————————
-    [Type ^D at a new line to end input]
-    load complete
+    Load replace: ✓
+    Checks: ✓
     
-    Differences:
-    ————————————
-    show | diff 
-    [edit routing-instances FW-CLOUD routing-options static]
-           route 192.0.2.40/32 { ... }
-    +      route 0.0.0.0/0 next-hop 192.0.2.1;
-    
-    Checks:
-    ———————
-    commit check 
-    configuration check succeeds
-    
+    Differences
+    ‾‾‾‾‾‾‾‾‾‾‾
+       [edit system]
+       -  time-zone Europe/Zurich;
+       +  time-zone Europe/Paris;
+       
     #+end_example
 
 ## License
