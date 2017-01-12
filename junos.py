@@ -59,7 +59,7 @@ directly followed by the equipment it should apply to.
    ID can be provided (after the name of the equipment).
 
  - ``commit`` will commit the configuration. Optionally, a duration in
-   second can be provided (after the name of the equipment). In this
+   minutes can be provided (after the name of the equipment). In this
    case, a commit-confirm command is issued.
 
 A host should use one of the following form:
