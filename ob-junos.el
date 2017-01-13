@@ -48,7 +48,7 @@
   "Path to junos.py helper.")
 
 (defconst org-babel-junos-cli-commands
-  '("show" "request")
+  '("show" "request" "ping")
   "Commands that should be run in a CLI session.")
 
 (defconst org-babel-junos-confirm-minutes
