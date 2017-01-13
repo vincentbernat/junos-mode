@@ -184,11 +184,16 @@ created.  Returns the (possibly newly created) process buffer."
         (add-hook 'comint-preoutput-filter-functions #'org-babel-junos-junos.py-output))
       buffer)))
 
+(defvar org-babel-junos-junos.py-output "")
 (defun org-babel-junos-junos.py-output (string)
   "Receive a new output string STRING and dispatch it."
   (condition-case-unless-debug nil
-      (progn
-        (dolist (line (s-lines string))
+      ;; We only want to process complete lines
+      (let* ((complete-string (concat org-babel-junos-junos.py-output string))
+             (all-lines (s-lines string))
+             (complete-lines (-drop-last 1 all-lines)))
+        (setq org-babel-junos-junos.py-output (-last-item all-lines))
+        (dolist (line complete-lines)
           ;; Parse the string to extract UUID, separator and line.
           (when-let ((matches (s-match "^\\([a-zA-Z0-9_-]+\\)\\(.\\)\\(.*\\)" line)))
             (let ((uuid (format "\n<async:junos:%s>\n" (nth 1 matches)))
