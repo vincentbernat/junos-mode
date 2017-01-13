@@ -181,6 +181,7 @@ def device(connect_string):
     with lock:
         if not device.connected:
             device.open(gather_facts=False, attempts=3)
+            device.timeout = 60
         yield device
 
 
