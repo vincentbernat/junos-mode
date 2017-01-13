@@ -6,13 +6,12 @@ There is currently no configuration knob.
 
 ![Screenshot of junos-mode](screenshot.jpg)
 
-## Integration with Babel
+## Integration with org-mode and Babel
 
-It also comes with an integration with Babel. It uses a small Python
-helper to efficiently handle several parallel sessions
+It also comes with an integration with org-mode and Babel. It uses a
+small Python helper to efficiently handle several parallel sessions
 asynchronously. This helper
 uses [Junos PyEZ](https://github.com/Juniper/py-junos-eznc).
-
 
     #+BEGIN_SRC junos :host alfred.exoscale.local
     system {
@@ -32,6 +31,13 @@ uses [Junos PyEZ](https://github.com/Juniper/py-junos-eznc).
        +  time-zone Europe/Paris;
        
     #+end_example
+    
+There are some limitations with this integration. Notably, it expects
+the output of the execution will be in a block, like above. If you
+force another representation, this won't work as expected.
+
+This is only compatible with with Org 9. It also requires
+the [UUID module](https://github.com/nicferrier/emacs-uuid).
 
 ## License
 
