@@ -52,6 +52,11 @@
 (defvar org-babel-junos-add-links t
   "Add links to commit/rollback a configuration after successful execution of a source block.")
 
+(defvar org-babel-junos-links-enhance-above-block t
+  "Links can alter the content of the example block that are just above them.
+
+This allows them to report their status.")
+
 (defun org-babel-expand-body:junos (body params)
   "Expand BODY according to PARAMS, return the expanded body.
 
@@ -204,7 +209,16 @@ used for additional arguments."
          (number (nth 3 matches))
          (uuid-commit (uuid-string))
          (session (org-babel-junos-initiate-session)))
-    (save-excursion)
+    (when org-babel-junos-links-enhance-above-block
+      (save-excursion
+        (forward-line -1)
+        (when (looking-at "^[ \t]*#\\+end_.*")
+          (let ((label (concat (capitalize command)
+                               (if number (format " (%s)" number) ""))))
+            (insert (concat
+                     label "\n"
+                     (s-repeat (length label) "‾") "\n"
+                     (format "<async:junos:%s>" uuid-commit) "\n"))))))
     (message (format "junos: %s/%s for %s" command number host))
     (comint-send-string session
                         (concat uuid-commit " "
