@@ -186,38 +186,41 @@ created.  Returns the (possibly newly created) process buffer."
 
 (defun org-babel-junos-junos.py-output (string)
   "Receive a new output string STRING and dispatch it."
-  (dolist (line (s-lines string))
-    ;; Parse the string to extract UUID, separator and line.
-    (when-let ((matches (s-match "^\\([a-zA-Z0-9_-]+\\)\\(.\\)\\(.*\\)" line)))
-      (let ((uuid (format "\n<async:junos:%s>\n" (nth 1 matches)))
-            (sep (nth 2 matches))
-            (line (nth 3 matches))
-            (buffers (org-buffer-list 'files t)))
-        (when (not (and (string= sep "+") (string= line "ok")))
-          (cl-loop for buffer in buffers
-                   until (with-current-buffer buffer
-                           (save-excursion
-                             (goto-char 0)
-                             (when (search-forward uuid nil t)
-                               (forward-line -1)
-                               (insert (concat "   " line "\n"))
-                               (when (and (string= sep " ") (string= line "ok"))
-                                 (forward-line -3)
-                                 (end-of-line)
-                                 (insert ": ✓")
-                                 (let ((beg (point)))
-                                   (forward-line 2)
-                                   (delete-region beg (point)))
-                                 (delete-char 5)
-                                 (forward-line 1))
-                               (when (or (string= sep " ")
-                                         (string= sep "."))
-                                 (let ((beg (point)))
-                                   (forward-line 1)
-                                   (delete-region beg (point)))
-                                 (org-babel-junos-junos.py-done))
-                               t))))))))
-  string)
+  (condition-case-unless-debug nil
+      (progn
+        (dolist (line (s-lines string))
+          ;; Parse the string to extract UUID, separator and line.
+          (when-let ((matches (s-match "^\\([a-zA-Z0-9_-]+\\)\\(.\\)\\(.*\\)" line)))
+            (let ((uuid (format "\n<async:junos:%s>\n" (nth 1 matches)))
+                  (sep (nth 2 matches))
+                  (line (nth 3 matches))
+                  (buffers (org-buffer-list 'files t)))
+              (when (not (and (string= sep "+") (string= line "ok")))
+                (cl-loop for buffer in buffers
+                         until (with-current-buffer buffer
+                                 (save-excursion
+                                   (goto-char 0)
+                                   (when (search-forward uuid nil t)
+                                     (forward-line -1)
+                                     (insert (concat "   " line "\n"))
+                                     (when (and (string= sep " ") (string= line "ok"))
+                                       (forward-line -3)
+                                       (end-of-line)
+                                       (insert ": ✓")
+                                       (let ((beg (point)))
+                                         (forward-line 2)
+                                         (delete-region beg (point)))
+                                       (delete-char 5)
+                                       (forward-line 1))
+                                     (when (or (string= sep " ")
+                                               (string= sep "."))
+                                       (let ((beg (point)))
+                                         (forward-line 1)
+                                         (delete-region beg (point)))
+                                       (org-babel-junos-junos.py-done))
+                                     t))))))))
+        string)
+    (error string)))
 
 (defun org-babel-junos-junos.py-done ()
   "Execute cleanup tasks when execution is done for a block.
