@@ -191,7 +191,6 @@ created.  Returns the (possibly newly created) process buffer."
           (when (looking-at " | \\[\\[junos-commit:")
             (delete-region (point) (+ 1 (line-end-position)))))))))
 
-<async:junos:
 (org-add-link-type "junos-commit" 'org-junos-commit)
 (org-add-link-type "junos-rollback" 'org-junos-rollback)
 
