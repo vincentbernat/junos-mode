@@ -225,7 +225,7 @@ created.  Returns the (possibly newly created) process buffer."
                                        (org-babel-junos-junos.py-done))
                                      t))))))))
         string)
-    (error string)))
+    (error (message "Error during processing of output filter") string)))
 
 (defun org-babel-junos-junos.py-done ()
   "Execute cleanup tasks when execution is done for a block.
