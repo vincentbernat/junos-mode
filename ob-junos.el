@@ -51,6 +51,14 @@
   '("show" "request")
   "Commands that should be run in a CLI session.")
 
+(defconst org-babel-junos-confirm-minutes
+  '(1 2 3 5 10)
+  "Possible arguments for commit confirm.")
+
+(defconst org-babel-junos-rollback-ids
+  '(0 1 2 3)
+  "Possible arguments for rollback.")
+
 (defvar org-babel-default-header-args:junos '())
 
 (defvar org-babel-junos-add-links t
@@ -241,11 +249,14 @@ current results and removing extra blank lines at the end."
             (goto-char (point-max))
             (widen)
             (forward-char)
-            (insert (format " | [[junos-commit:%s][Commit]]  🍂" host))
-            (insert (format  "  [[junos-commit:%s#2][Commit confirm]]  🍂" host))
-            (insert (format  "  [[junos-rollback:%s][Rollback]]  🍂" host))
-            (insert (format  "  [[junos-rollback:%s#1][Rollback 1]]\n" host))
-            (when (looking-at " | \\[\\[junos-commit:")
+            (insert (format " - [[junos-commit:%s][Commit]]  🍂" host))
+            (insert (format  "  Commit confirm %s  🍂"
+                             (mapconcat (lambda (i) (format "[[junos-commit:%s#%s][%s]]" host i i))
+                                        org-babel-junos-confirm-minutes " ")))
+            (insert (format  "  Rollback %s  🍂"
+                             (mapconcat (lambda (i) (format "[[junos-rollback:%s#%s][%s]]" host i i))
+                                        org-babel-junos-rollback-ids " ")))
+            (when (looking-at " - \\[\\[junos-commit:")
               (delete-region (point) (+ 1 (line-end-position))))))))))
 
 (org-add-link-type "junos-commit" 'org-junos-commit)
