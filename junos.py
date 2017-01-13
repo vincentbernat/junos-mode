@@ -302,7 +302,7 @@ def do_run(tag, args, lines):
         raise TypeError("run expects a unique line of command")
     with device(args[0]) as dev:
         result = dev.cli(lines[0], warning=False)
-        output(tag, ["ok", result])
+        output(tag, ["ok", result.strip()])
 
 
 def main():
