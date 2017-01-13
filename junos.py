@@ -333,9 +333,6 @@ def main():
                    ["error"] +
                    traceback.format_exception(exc_type, exc_value, exc_tb))
             del exc_tb
-    count = threading.active_count() - 1
-    if count > 0:
-        output("*", "waiting for remaining threads ({})".format(count))
     output("*", "bye")
 
 
