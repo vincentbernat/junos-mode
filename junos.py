@@ -148,6 +148,7 @@ def background(fn):
     @functools.wraps(fn)
     def run(*args, **kwargs):
         t = threading.Thread(target=_fn, args=args, kwargs=kwargs)
+        t.setDaemon(True)
         t.start()
 
     return run
