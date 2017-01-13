@@ -32,6 +32,35 @@ uses [Junos PyEZ](https://github.com/Juniper/py-junos-eznc).
        
     #+end_example
     
+You can also execute CLI commands:
+
+    #+BEGIN_SRC junos :host alfred.exoscale.local
+    show version
+    #+END_SRC
+    
+    #+RESULTS:
+    #+begin_example
+       
+       fpc0:
+       --------------------------------------------------------------------------
+       Hostname: alfred
+       Model: qfx5100-48s-6q
+       Junos: 14.1X53-D35.3
+       JUNOS Base OS Software Suite [14.1X53-D35.3]
+       JUNOS Base OS boot [14.1X53-D35.3]
+       JUNOS Online Documentation [14.1X53-D35.3]
+       JUNOS Crypto Software Suite [14.1X53-D35.3]
+       JUNOS Kernel Software Suite [14.1X53-D35.3]
+       JUNOS Packet Forwarding Engine Support (qfx-ex-x86-32) [14.1X53-D35.3]
+       JUNOS Routing Software Suite [14.1X53-D35.3]
+       JUNOS SDN Software Suite [14.1X53-D35.3]
+       JUNOS Enterprise Software Suite [14.1X53-D35.3]
+       JUNOS Web Management Platform Package [14.1X53-D35.3]
+       JUNOS py-base-i386 [14.1X53-D35.3]
+       JUNOS Host Software [13.2X51-D38]
+       
+    #+end_example
+    
 There are some limitations with this integration. Notably, it expects
 the output of the execution will be in a block, like above. If you
 force another representation, this won't work as expected.

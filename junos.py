@@ -62,6 +62,9 @@ directly followed by the equipment it should apply to.
    minutes can be provided (after the name of the equipment). In this
    case, a commit-confirm command is issued.
 
+ - ``run`` will run a command (in a shell). It will return ``ok`` and
+   the output of the command.
+
 A host should use one of the following form:
 
  - ``host.example.com`` (default user from ``~/.ssh/config`` and
@@ -288,6 +291,18 @@ def do_commit(tag, args, lines):
                         for err in ce.errs]
                 output(tag, ["error"] + errs)
             output(tag, "ok")
+
+
+@background
+def do_run(tag, args, lines):
+    """Run a shell command."""
+    if len(args) != 1:
+        raise TypeError("run expects a unique argument")
+    if len(lines) != 1:
+        raise TypeError("run expects a unique line of command")
+    with device(args[0]) as dev:
+        result = dev.cli(lines[0], warning=False)
+        output(tag, ["ok", result])
 
 
 def main():

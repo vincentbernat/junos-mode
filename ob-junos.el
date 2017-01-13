@@ -47,6 +47,10 @@
     junos-path)
   "Path to junos.py helper.")
 
+(defconst org-babel-junos-cli-commands
+  '("show" "request")
+  "Commands that should be run in a CLI session.")
+
 (defvar org-babel-default-header-args:junos '())
 
 (defvar org-babel-junos-add-links t
@@ -82,12 +86,49 @@ should get a BODY and the associated PARAMS."
   (let* ((host-name (or (cdr (assq :host params))
                         (error "An HOST parameter is mandatory")))
          (session (org-babel-junos-initiate-session))
-         (proc (get-buffer-process session))
-         (uuid-load (uuid-string))
-         (uuid-diff (uuid-string))
-         (uuid-check (uuid-string))
          (full-body (org-babel-expand-body:junos
-		     body params)))
+		     body params))
+         (lines (s-lines full-body)))
+    ;; Check if we have only show/request commands
+    (let* ((result
+            (if (let ((re (format "^\\s-*\\(#\\|\\(%s\\)\\s-+\\|$\\)"
+                                  (s-join "\\|" org-babel-junos-cli-commands))))
+                  (--all?
+                   (s-matches? re it) lines))
+                (org-babel-junos-exec host-name session lines)
+              (org-babel-junos-load host-name session lines)))
+           (nb (s-count-matches "\n" result)))
+      ;; We need to have at least X lines, otherwise, the results
+      ;; won't be embedded in an example block.
+      (if (> nb org-babel-min-lines-for-block-output)
+          result
+        (concat result (s-repeat (- org-babel-min-lines-for-block-output nb) "\n"))))))
+
+(defun org-babel-junos-exec (host-name session lines)
+  "Execute CLI commands.
+
+Commands are executed on HOST-NAME using SESSION.  All LINES will
+be executed in sequence."
+  (mapconcat (lambda (line)
+               (let ((uuid (uuid-string)))
+                 (comint-send-string session
+                                     (concat uuid "+"
+                                             "run " host-name "\n"
+                                             uuid ">"
+                                             line "\n"
+                                             uuid "." "\n"))
+                 (format "<async:junos:%s>" uuid)))
+             lines
+             "\n"))
+
+(defun org-babel-junos-load (host-name session lines)
+  "Execute a configuration load.
+
+Load is executed on HOST-NAME using SESSION and sending the
+provided LINES."
+  (let ((uuid-load (uuid-string))
+        (uuid-diff (uuid-string))
+        (uuid-check (uuid-string)))
     ;; Load
     (comint-send-string session
                         (concat uuid-load "+"
@@ -96,7 +137,7 @@ should get a BODY and the associated PARAMS."
                         (concat
                          (s-join "\n"
                                  (mapcar (lambda (l) (concat uuid-load ">" l))
-                                         (s-lines full-body))) "\n"))
+                                         lines)) "\n"))
     (comint-send-string session
                         (concat uuid-load ".\n"))
     ;; Diff
@@ -166,36 +207,46 @@ created.  Returns the (possibly newly created) process buffer."
                                  (let ((beg (point)))
                                    (forward-line 1)
                                    (delete-region beg (point)))
-                                 (when org-babel-junos-add-links
-                                   (org-babel-junos-junos.py-add-links)))
+                                 (org-babel-junos-junos.py-done))
                                t))))))))
   string)
 
-(defun org-babel-junos-junos.py-add-links ()
-  "Add links for commit/rollback just below the current results."
+(defun org-babel-junos-junos.py-done ()
+  "Execute cleanup tasks when execution is done for a block.
+
+This includes adding links for commit/rollback just below the
+current results and removing extra blank lines at the end."
   (save-restriction
     (org-narrow-to-block)
     (goto-char 0)
     (unless (search-forward "<async:junos:" nil t)
-      ;; Grab the host from the first line
-      (goto-char 0)
-      (forward-line 1)
-      (when (looking-at "Host: ")
-        (let* ((beg (point))
-               (end (line-end-position))
-               (host (buffer-substring-no-properties (+ 6 beg) end)))
-          (forward-line 1)
-          (delete-region beg (point))
-          ;; We can now add the links
-          (goto-char (point-max))
-          (widen)
-          (forward-char)
-          (insert (format " | [[junos-commit:%s][Commit]]  🍂" host))
-          (insert (format  "  [[junos-commit:%s#2][Commit confirm]]  🍂" host))
-          (insert (format  "  [[junos-rollback:%s][Rollback]]  🍂" host))
-          (insert (format  "  [[junos-rollback:%s#1][Rollback 1]]\n" host))
-          (when (looking-at " | \\[\\[junos-commit:")
-            (delete-region (point) (+ 1 (line-end-position)))))))))
+      ;; Remove blank lines at the end
+      (goto-char (point-max))
+      (forward-line -1)
+      (while (= (point) (line-end-position))
+        (delete-region (point) (+ 1 (point)))
+        (forward-line -1))
+      ;; Add links
+      (when org-babel-junos-add-links
+        ;; Grab the host from the first line
+        (goto-char 0)
+        (forward-line 1)
+        (when (looking-at "Host: ")
+          (let* ((beg (point))
+                 (end (line-end-position))
+                 (host (buffer-substring-no-properties (+ 6 beg) end)))
+            (forward-line 1)
+            (delete-region beg (point))
+            ;; We can now add the links
+            (goto-char (point-max))
+            (widen)
+            (forward-char)
+            (insert (format " | [[junos-commit:%s][Commit]]  🍂" host))
+            (insert (format  "  [[junos-commit:%s#2][Commit confirm]]  🍂" host))
+            (insert (format  "  [[junos-rollback:%s][Rollback]]  🍂" host))
+            (insert (format  "  [[junos-rollback:%s#1][Rollback 1]]\n" host))
+            (when (looking-at " | \\[\\[junos-commit:")
+              (delete-region (point) (+ 1 (line-end-position))))))))))
 
 (org-add-link-type "junos-commit" 'org-junos-commit)
 (org-add-link-type "junos-rollback" 'org-junos-rollback)
