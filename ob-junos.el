@@ -110,6 +110,7 @@ should get a BODY and the associated PARAMS."
     ;; Build result with placeholders
     (s-join "\n" (list
                   (format "Host: %s" host-name)
+                  (format "Timestamp: %s" (format-time-string (cdr org-time-stamp-formats)))
                   "Load replace"
                   "‾‾‾‾‾‾‾‾‾‾‾‾"
                   (format "<async:junos:%s>" uuid-load)
@@ -216,7 +217,7 @@ used for additional arguments."
           (let ((label (concat (capitalize command)
                                (if number (format " (%s)" number) ""))))
             (insert (concat
-                     label "\n"
+                     label " " (format-time-string (cdr org-time-stamp-formats)) "\n"
                      (s-repeat (length label) "‾") "\n"
                      (format "<async:junos:%s>" uuid-commit) "\n"))))))
     (message (format "junos: %s/%s for %s" command number host))
