@@ -253,7 +253,7 @@ current results and removing extra blank lines at the end."
             (insert (format  "  Commit confirm %s  🍂"
                              (mapconcat (lambda (i) (format "[[junos-commit:%s#%s][%s]]" host i i))
                                         org-babel-junos-confirm-minutes " ")))
-            (insert (format  "  Rollback %s  🍂"
+            (insert (format  "  Rollback %s\n"
                              (mapconcat (lambda (i) (format "[[junos-rollback:%s#%s][%s]]" host i i))
                                         org-babel-junos-rollback-ids " ")))
             (when (looking-at " - \\[\\[junos-commit:")
