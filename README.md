@@ -68,6 +68,10 @@ force another representation, this won't work as expected.
 This is only compatible with with Org 9. It also requires
 the [UUID module](https://github.com/nicferrier/emacs-uuid).
 
+Note that the helper program is
+using [Junos PyEZ](http://junos-pyez.readthedocs.io/) which doesn't
+check SSH keys.
+
 ## License
 
 > This file is free software; you can redistribute it and/or modify
