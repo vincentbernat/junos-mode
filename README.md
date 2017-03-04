@@ -72,6 +72,14 @@ Note that the helper program is
 using [Junos PyEZ](http://junos-pyez.readthedocs.io/) which doesn't
 check SSH keys.
 
+## Demo
+
+See the following video for a live demo:
+
+ - https://www.youtube.com/watch?v=e9sjhbxWJNE
+ - https://www.youtube.com/watch?v=jCH-gO7RfFE
+ - https://www.youtube.com/watch?v=L0G72g7R-xY
+
 ## License
 
 > This file is free software; you can redistribute it and/or modify
