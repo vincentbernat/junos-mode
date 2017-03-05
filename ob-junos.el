@@ -1,4 +1,4 @@
-;;; ob-junos.el --- org-babel functions for JunOS evaluation
+;;; ob-junos.el --- org-babel functions for Junos evaluation
 
 ;; Copyright (C) 2014  Free Software Foundation, Inc.
 
@@ -25,7 +25,7 @@
 
 ;;; Commentary:
 
-;; This will evaluate JunOS snippets to a remote JunOS device.
+;; This will evaluate Junos snippets to a remote Junos device.
 
 ;;; Code:
 (require 'ob)
@@ -38,7 +38,7 @@
 
 (defconst org-babel-header-args:junos
   '((host . :any))
-  "JunOS-specific header arguments.")
+  "Junos-specific header arguments.")
 
 (defconst org-babel-junos-junos.py-path
   (let* ((current-file (or load-file-name buffer-file-name))
@@ -87,7 +87,7 @@ are left as-is."
 
 ;;;###autoload
 (defun org-babel-execute:junos (body params)
-  "Execute a block of JunOS code with org-babel.
+  "Execute a block of Junos code with org-babel.
 
 This function is called by `org-babel-execute-src-block'.  It
 should get a BODY and the associated PARAMS."
@@ -271,7 +271,7 @@ current results and removing extra blank lines at the end."
 (org-add-link-type "junos-rollback" 'org-junos-rollback)
 
 (defun org-junos-do (command host)
-  "Execute a JunOS COMMAND for the given HOST.
+  "Execute a Junos COMMAND for the given HOST.
 
 If HOST contains ends with `::' followed by a number, it will be
 used for additional arguments."
@@ -298,10 +298,10 @@ used for additional arguments."
                                 "\n"))))
 
 (defun org-junos-commit (host)
-  "Commit a JunOS configuration for provided HOST."
+  "Commit a Junos configuration for provided HOST."
   (org-junos-do "commit" host))
 (defun org-junos-rollback (host)
-  "Rollback JunOS configuration for provided HOST."
+  "Rollback Junos configuration for provided HOST."
   (org-junos-do "rollback" host))
 
 (provide 'ob-junos)

@@ -1,4 +1,4 @@
-;;; junos-mode.el --- Major mode for JunOS configuration files
+;;; junos-mode.el --- Major mode for Junos configuration files
 
 ;; Copyright (C) 2014  Free Software Foundation, Inc.
 
@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; Simple mode for JunOS-like files
+;; Simple mode for Junos-like files
 
 ;;; Code:
 (unless (fboundp 'setq-local)
@@ -59,8 +59,8 @@
   "Keyword highlighting specification for `junos-mode'.")
 
 ;;;###autoload
-(define-derived-mode junos-mode c-mode "JunOS"
-  "A major mode for editing JunOS files."
+(define-derived-mode junos-mode c-mode "Junos"
+  "A major mode for editing Junos files."
   :syntax-table junos-mode-syntax-table
   (c-set-offset 'label '+)
   (setq-local comment-start "# ")

@@ -1,6 +1,6 @@
-# Mode for JunOS configuration files
+# Mode for Junos configuration files
 
-This features `junos-mode` a mode for editing JunOS-like files.
+This features `junos-mode` a mode for editing Junos-like files.
 
 There is currently no configuration knob.
 
