@@ -31,6 +31,7 @@
 (require 'ob)
 (require 'cl-lib)
 (require 's)
+(require 'dash)
 (require 'uuid)
 
 ;; optionally define a file extension for this language
