@@ -239,7 +239,7 @@ def do_diff(tag, args, lines):
     with device(args[0]) as dev:
         with Config(dev) as cu:
             diff = cu.diff()
-            output(tag, ["ok", diff.strip() or ""])
+            output(tag, ["ok", (diff and diff.strip()) or ""])
 
 
 @background
