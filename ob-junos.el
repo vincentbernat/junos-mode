@@ -35,6 +35,14 @@
 (require 'uuid)
 (require 'subr-x)
 
+;;;; Compatibility
+
+(eval-and-compile
+  (when (version< emacs-version "26")
+    (with-no-warnings
+      (defalias 'when-let* #'when-let)
+      (function-put #'when-let* 'lisp-indent-function 1))))
+
 ;; optionally define a file extension for this language
 (add-to-list 'org-babel-tangle-lang-exts '("junos" . "cfg"))
 
@@ -197,7 +205,7 @@ created.  Returns the (possibly newly created) process buffer."
         (setq org-babel-junos-junos.py-output (-last-item all-lines))
         (dolist (line complete-lines)
           ;; Parse the string to extract UUID, separator and line.
-          (when-let ((matches (s-match "^\\([a-zA-Z0-9_-]+\\)\\(.\\)\\(.*\\)" line)))
+          (when-let* ((matches (s-match "^\\([a-zA-Z0-9_-]+\\)\\(.\\)\\(.*\\)" line)))
             (let ((uuid (format "\n<async:junos:%s>\n" (nth 1 matches)))
                   (sep (nth 2 matches))
                   (line (nth 3 matches))
