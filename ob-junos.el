@@ -33,6 +33,7 @@
 (require 's)
 (require 'dash)
 (require 'uuid)
+(require 'subr-x)
 
 ;; optionally define a file extension for this language
 (add-to-list 'org-babel-tangle-lang-exts '("junos" . "cfg"))
