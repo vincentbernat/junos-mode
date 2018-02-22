@@ -46,11 +46,11 @@
    "Syntax table for `junos-mode'.")
 
 (defvar junos-font-lock-keywords
-  '(("^\\s-*\\(\\(inactive\\|active\\|delete\\|replace\\):\\s-+\\)?\\(\\sw+\\)\\s-*\\(\\(\\sw+\\s-+\\)*\\){\\s-*\\(\\s<.*\\)?$"
+  '(("^\\s-*\\(\\(inactive\\|active\\|delete\\|replace\\|protect\\|unprotect\\):\\s-+\\)?\\(\\sw+\\)\\s-*\\(\\(\\sw+\\s-+\\)*\\){\\s-*\\(\\s<.*\\)?$"
      (1 'font-lock-keyword-face nil t)
      (3 'font-lock-function-name-face)
      (4 'font-lock-variable-name-face nil t))
-    ("^\\s-*\\(\\(inactive\\|active\\|delete\\|replace\\):\\s-+\\)?\\(\\sw+\\)"
+    ("^\\s-*\\(\\(inactive\\|active\\|delete\\|replace\\|protect\\|unprotect\\):\\s-+\\)?\\(\\sw+\\)"
      (1 'font-lock-keyword-face nil t)
      (3 'font-lock-type-face))
     ;; IP
