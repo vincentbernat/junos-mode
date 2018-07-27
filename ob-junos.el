@@ -3,6 +3,8 @@
 ;; Copyright (C) 2014  Free Software Foundation, Inc.
 
 ;; Author: Vincent Bernat
+;; Package-Requires: ((org "8.0.0") (uuid "20120910.151") (dash "2.14.1") (s "1.12.0"))
+;; URL: https://github.com/vincentbernat/junos-mode
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -28,11 +30,11 @@
 ;; This will evaluate Junos snippets to a remote Junos device.
 
 ;;; Code:
-(require 'ob)
 (require 'cl-lib)
-(require 's)
-(require 'dash)
+(require 'ob)
 (require 'uuid)
+(require 'dash)
+(require 's)
 
 ;; optionally define a file extension for this language
 (add-to-list 'org-babel-tangle-lang-exts '("junos" . "cfg"))
