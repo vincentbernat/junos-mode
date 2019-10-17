@@ -72,6 +72,13 @@ Note that the helper program is
 using [Junos PyEZ](http://junos-pyez.readthedocs.io/) which doesn't
 check SSH keys.
 
+A host should use one of the following form:
+
+ - `host.example.com` (default user from `~/.ssh/config` and
+   authentication with SSH key)
+ - `user@host.example.com` (authentication with SSH key)
+ - `user:password@host.example.com` (authentication with password)
+
 ## Demo
 
 See the following video for a live demo:
