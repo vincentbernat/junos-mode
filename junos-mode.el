@@ -3,7 +3,9 @@
 ;; Copyright (C) 2014  Free Software Foundation, Inc.
 
 ;; Author: Vincent Bernat
+;; URL: https://github.com/vincentbernat/junos-mode
 ;; Keywords: extensions
+;; Version: 0
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

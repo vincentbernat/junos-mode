@@ -1,10 +1,11 @@
-;;; ob-junos.el --- org-babel functions for Junos evaluation
+;;; ob-junos.el --- Org babel functions for Junos evaluation
 
 ;; Copyright (C) 2014  Free Software Foundation, Inc.
 
 ;; Author: Vincent Bernat
-;; Package-Requires: ((org "8.0.0") (uuid "20120910.151") (dash "2.14.1") (s "1.12.0"))
+;; Package-Requires: ((org "8.0.0") (uuid "20120910.151") (dash "2.14.1") (s "1.12.0") (emacs "26.1"))
 ;; URL: https://github.com/vincentbernat/junos-mode
+;; Version: 0
 
 ;; This file is NOT part of GNU Emacs.
 
