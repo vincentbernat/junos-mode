@@ -143,7 +143,7 @@ def background(fn):
     def _fn(*args, **kwargs):
         try:
             fn(*args, **kwargs)
-        except Exception as e:
+        except:                 # noqa: E722
             exc_type, exc_value, exc_tb = sys.exc_info()[:3]
             output(args[0], ["error"] +
                    traceback.format_exception(exc_type, exc_value, exc_tb))
@@ -344,7 +344,7 @@ def main():
             elif sep == ".":
                 do(tag, inputs[tag])
                 del inputs[tag]
-        except Exception as e:
+        except:                 # noqa: E722
             exc_type, exc_value, exc_tb = sys.exc_info()[:3]
             output(tag or "*",
                    ["error"] +
