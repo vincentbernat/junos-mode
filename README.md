@@ -6,6 +6,26 @@ There is currently no configuration knob.
 
 ![Screenshot of junos-mode](screenshot.jpg)
 
+## Install
+
+With `use-package` and `quelpa`:
+
+``` emacs-lisp
+(use-package junos-mode
+  :quelpa (junos-mode :fetcher github
+                      :repo "vincentbernat/junos-mode"
+                      :files (:defaults "junos.py"))
+  :defer t)
+```
+
+With Doom Emacs:
+
+``` emacs-lisp
+(package! junos-mode :recipe (:host github
+                              :repo "vincentbernat/junos-mode"
+                              :files (:defaults "junos.py")))
+```
+
 ## Integration with org-mode and Babel
 
 It also comes with an integration with org-mode and Babel. It uses a
