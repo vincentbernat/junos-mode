@@ -101,11 +101,8 @@ A host should use one of the following form:
 
 ## Demo
 
-See the following video for a live demo:
-
- - https://www.youtube.com/watch?v=e9sjhbxWJNE
- - https://www.youtube.com/watch?v=jCH-gO7RfFE
- - https://www.youtube.com/watch?v=L0G72g7R-xY
+See this [blog post](https://vincent.bernat.ch/en/blog/2017-netops-org-mode). It
+includes 3 videos demonstrating this mode.
 
 ## License
 
